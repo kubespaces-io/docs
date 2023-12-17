@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
-    <id>https://your-docusaurus-site.example.com/blog</id>
+    <id>https://docs.kubespaces.io/blog</id>
     <title>Kubespaces docs Blog</title>
     <updated>2023-12-17T00:00:00.000Z</updated>
     <generator>https://github.com/jpmonette/feed</generator>
-    <link rel="alternate" href="https://your-docusaurus-site.example.com/blog"/>
+    <link rel="alternate" href="https://docs.kubespaces.io/blog"/>
     <subtitle>Kubespaces docs Blog</subtitle>
-    <icon>https://your-docusaurus-site.example.com/img/favicon.ico</icon>
+    <icon>https://docs.kubespaces.io/img/favicon.ico</icon>
     <entry>
         <title type="html"><![CDATA[Welcome]]></title>
-        <id>https://your-docusaurus-site.example.com/blog/welcome</id>
-        <link href="https://your-docusaurus-site.example.com/blog/welcome"/>
+        <id>https://docs.kubespaces.io/blog/welcome</id>
+        <link href="https://docs.kubespaces.io/blog/welcome"/>
         <updated>2023-12-17T00:00:00.000Z</updated>
         <summary type="html"><![CDATA[Kubespaces is a Kubernetes-native platform for building and deploying applications on Kubernetes. It is designed to be a simple and easy-to-use platform for developers and operators to build, deploy, and manage applications on Kubernetes.]]></summary>
         <content type="html"><![CDATA[<p><a href="https://kubespaces.io/" target="_blank" rel="noopener noreferrer">Kubespaces</a> is a Kubernetes-native platform for building and deploying applications on Kubernetes. It is designed to be a simple and easy-to-use platform for developers and operators to build, deploy, and manage applications on Kubernetes.</p>]]></content>
