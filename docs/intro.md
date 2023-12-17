@@ -2,15 +2,15 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Introduction
 
-Let's discover **Docusaurus in less than 5 minutes**.
+Let's discover **Kubespaces in less than 5 minutes**.
 
 ## Getting Started
 
-Get started by **creating a new site**.
+Get started by **signing up on [kubespaces.io](https://app.kubespaces.io)**.
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
+<!-- Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**. -->
 
 ### What you'll need
 
