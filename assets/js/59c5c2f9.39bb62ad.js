@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[843],{4424:e=>{e.exports=JSON.parse('{"title":"Architecture","slug":"/category/architecture","permalink":"/docs/category/architecture","navigation":{"previous":{"title":"Security","permalink":"/docs/security/"},"next":{"title":"Kubespaces Architecture","permalink":"/docs/architecture/"}}}')}}]);

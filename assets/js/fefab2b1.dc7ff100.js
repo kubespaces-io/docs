@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[58],{3308:e=>{e.exports=JSON.parse('{"title":"Security","slug":"/category/security","permalink":"/docs/category/security","navigation":{"previous":{"title":"Use Kubespaces","permalink":"/docs/usage/use-kubespaces"},"next":{"title":"Security","permalink":"/docs/security/"}}}')}}]);

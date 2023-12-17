@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkdocs=self.webpackChunkdocs||[]).push([[771],{3652:e=>{e.exports=JSON.parse('{"title":"Usage","slug":"/category/usage","permalink":"/docs/category/usage","navigation":{"previous":{"title":"Kubespaces CLI","permalink":"/docs/installation/cli"},"next":{"title":"Use Kubespaces","permalink":"/docs/usage/use-kubespaces"}}}')}}]);

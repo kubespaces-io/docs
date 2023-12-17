@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+    <channel>
+        <title>Kubespaces docs Blog</title>
+        <link>https://your-docusaurus-site.example.com/blog</link>
+        <description>Kubespaces docs Blog</description>
+        <lastBuildDate>Sun, 17 Dec 2023 00:00:00 GMT</lastBuildDate>
+        <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
+        <generator>https://github.com/jpmonette/feed</generator>
+        <language>en</language>
+        <item>
+            <title><![CDATA[Welcome]]></title>
+            <link>https://your-docusaurus-site.example.com/blog/welcome</link>
+            <guid>https://your-docusaurus-site.example.com/blog/welcome</guid>
+            <pubDate>Sun, 17 Dec 2023 00:00:00 GMT</pubDate>
+            <description><![CDATA[Kubespaces is a Kubernetes-native platform for building and deploying applications on Kubernetes. It is designed to be a simple and easy-to-use platform for developers and operators to build, deploy, and manage applications on Kubernetes.]]></description>
+            <content:encoded><![CDATA[<p><a href="https://kubespaces.io/" target="_blank" rel="noopener noreferrer">Kubespaces</a> is a Kubernetes-native platform for building and deploying applications on Kubernetes. It is designed to be a simple and easy-to-use platform for developers and operators to build, deploy, and manage applications on Kubernetes.</p>]]></content:encoded>
+            <category>kubespaces</category>
+            <category>hello</category>
+            <category>docs</category>
+        </item>
+    </channel>
+</rss>
