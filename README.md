@@ -24,6 +24,7 @@ $ yarn build
 
 This command generates static content into the `build` directory and can be served using any static contents hosting service.
 
+
 ### Deployment
 
 The Github action in this repository will automatically deploy the website to GitHub pages when a commit is pushed to the `main` branch. Deployment is done using the `gh-pages` branch.
