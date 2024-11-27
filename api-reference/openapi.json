@@ -18,178 +18,3378 @@
       "bearerAuth": []
     }
   ],
-  "paths": {
-    "/plants": {
-      "get": {
-        "description": "Returns all plants from the system that the user has access to",
-        "parameters": [
-          {
-            "name": "limit",
-            "in": "query",
-            "description": "The maximum number of results to return",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Plant"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      },
-      "post": {
-        "description": "Creates a new plant in the store",
-        "requestBody": {
-          "description": "Plant to add to the store",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewPlant"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "plant response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Plant"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/plants/{id}": {
-      "delete": {
-        "description": "Deletes a single plant based on the ID supplied",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "description": "ID of plant to delete",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Plant deleted",
-            "content": {}
-          },
-          "400": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "Plant": {
-        "required": [
-          "name"
-        ],
-        "type": "object",
-        "properties": {
-          "name": {
-            "description": "The name of the plant",
-            "type": "string"
-          },
-          "tag": {
-            "description": "Tag to specify the type",
-            "type": "string"
-          }
-        }
-      },
-      "NewPlant": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/Plant"
-          },
-          {
-            "required": [
-              "id"
-            ],
-            "type": "object",
-            "properties": {
-              "id": {
-                "description": "Identification number of the plant",
-                "type": "integer",
-                "format": "int64"
-              }
-            }
-          }
-        ]
-      },
-      "Error": {
-        "required": [
-          "error",
-          "message"
-        ],
-        "type": "object",
-        "properties": {
-          "error": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "message": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
-      }
-    }
-  }
-}
+  paths:
+  /internal/v1/hostclusters:
+    get:
+      tags:
+        - host-clusters
+      summary: List all host clusters
+      description: List all host clusters
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/HostCluster'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    post:
+      tags:
+        - host-clusters
+      summary: Create a host cluster. Admin only
+      description: Create a host cluster. Admin only
+      requestBody:
+        description: Host cluster
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHostCluster'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostCluster'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+  /internal/v1/hostclusters/{identity}:
+    get:
+      tags:
+        - host-clusters
+      summary: Get a host cluster by identity
+      description: Get a host cluster by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Host cluster identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostCluster'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    put:
+      tags:
+        - host-clusters
+      summary: Update a host cluster by identity
+      description: Update a host cluster by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Host cluster identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Host cluster
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateHostCluster'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HostCluster'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - host-clusters
+      summary: Delete a host cluster by identity
+      description: >-
+        Delete a host cluster by identity. Only possible if no tenant spaces are
+        hosted on the cluster
+      parameters:
+        - name: identity
+          in: path
+          description: Host cluster identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /internal/v1/hostclusters/{identity}/clouds:
+    get:
+      tags:
+        - host-clusters
+      summary: Get clouds by host cluster identity
+      description: Fetches all clouds associated with a specific host cluster
+      parameters:
+        - name: identity
+          in: path
+          description: Host cluster identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cloud'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /internal/v1/reconcile/tenants:
+    post:
+      tags:
+        - Admin
+      summary: Reconcile all tenants
+      description: Reconcile all tenants. It will queue all tenants for reconciliation.
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                type: string
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /k8s/v1/auth/{tenantIdentity}:
+    post:
+      tags:
+        - TenantAuth
+      summary: Authenticate a user for a tenant
+      description: Authenticate a user for a tenant
+      parameters:
+        - name: tenantIdentity
+          in: path
+          description: The identity of the tenant
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1.TokenReview'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1.TokenReview'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/v1.TokenReview'
+  /membership-invites:
+    get:
+      tags:
+        - Organisation Membership
+      summary: Get all invites for the organisation
+      description: Get all invites for the organisation
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationMembmerInvite'
+    post:
+      tags:
+        - Organisation Membership
+      summary: Invite a user to join an organisation
+      description: Invite a user to join an organisation
+      requestBody:
+        description: Invite user request
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/InviteUserRequest'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InviteUserRequest'
+      x-codegen-request-body-name: invite
+  /membership-invites/accept:
+    put:
+      tags:
+        - Organisation Membership
+      summary: Accept an invite to join an organisation
+      description: Accept an invite to join an organisation
+      requestBody:
+        description: Invite code
+        content:
+          application/json:
+            schema:
+              type: string
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AcceptInviteRequest'
+      x-codegen-request-body-name: inviteCode
+  /users/{identity}/hostcluster:
+    post:
+      tags:
+        - HostCluster
+      summary: Create a user host cluster
+      description: >-
+        This endpoint creates a new host cluster for the user in a specified
+        cloud and region, allocating resources accordingly.
+      parameters:
+        - name: identity
+          in: path
+          description: User Identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Request payload for creating a user host cluster
+        content:
+          '*/*':
+            schema:
+              $ref: '#/components/schemas/appusers.CreateUserHostClusterRequest'
+        required: true
+      responses:
+        '200':
+          description: Host cluster created successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: Bad request - input validation failed
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+        '401':
+          description: Unauthorized - forbidden access
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Resource not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+  /v1/clouds:
+    get:
+      tags:
+        - clouds
+      summary: List all clouds
+      description: List all clouds
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Cloud'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    post:
+      tags:
+        - clouds
+      summary: Create a cloud. Admin only.
+      description: Create a cloud. Admin only.
+      requestBody:
+        description: Cloud
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCloud'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+  /v1/clouds/{identity}:
+    get:
+      tags:
+        - clouds
+      summary: Get a cloud by identity
+      description: Get a cloud by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    put:
+      tags:
+        - clouds
+      summary: Update a cloud by identity. Admin only.
+      description: Update a cloud by identity. Admin only.
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Cloud
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCloud'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Cloud'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - clouds
+      summary: Delete a cloud by identity. Admin only.
+      description: Delete a cloud by identity. Admin only.
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /v1/clouds/{identity}/regions:
+    get:
+      tags:
+        - clouds
+      summary: List all cloud regions
+      description: List all cloud regions
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CloudRegion'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    post:
+      tags:
+        - clouds
+      summary: Create a cloud region
+      description: Create a cloud region
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Cloud region
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCloudRegion'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CreatedCloudRegion'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+  /v1/clouds/{identity}/regions/{regionIdentity}:
+    get:
+      tags:
+        - clouds
+      summary: Get a cloud region by identity
+      description: Get a cloud region by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+        - name: regionIdentity
+          in: path
+          description: Cloud region identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CloudRegion'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    delete:
+      tags:
+        - clouds
+      summary: Revoke a cloud region by identity. Admin only
+      description: Revoke a cloud region by identity. Admin only
+      parameters:
+        - name: identity
+          in: path
+          description: Cloud identity
+          required: true
+          schema:
+            type: string
+        - name: regionIdentity
+          in: path
+          description: Cloud region identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /v1/me/organisation-invites:
+    get:
+      tags:
+        - Me
+      summary: List the invites for the currently authenticated user
+      description: >-
+        List the invites for the currently authenticated user. This endpoint
+        returns a list of organisation invites the user has received. The user
+        must be authenticated. If the user has not received any invites, an
+        empty list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationMembmerInvite'
+  /v1/me/organisation-invites/{inviteCode}:
+    delete:
+      tags:
+        - Me
+      summary: Reject an organisation invite
+      description: Reject an organisation invite
+      parameters:
+        - name: inviteCode
+          in: path
+          description: Invite code
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Email of the invitee
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content: {}
+  /v1/me/organisation-memberships:
+    get:
+      tags:
+        - Me
+      summary: List the memberships of the currently authenticated user
+      description: >-
+        List the memberships of the currently authenticated user. This endpoint
+        returns a list of organisations the user is a member of. The user must
+        be authenticated. If the user is not part of any organisation, an empty
+        list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationMember'
+  /v1/me/organisation-memberships/{organisation}:
+    get:
+      tags:
+        - Me
+      summary: List the memberships of the currently authenticated user
+      description: >-
+        List the memberships of the currently authenticated user. This endpoint
+        returns a list of organisations the user is a member of. The user must
+        be authenticated. If the user is not part of any organisation, an empty
+        list is returned.
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganisationMember'
+  /v1/organisations:
+    post:
+      tags:
+        - organisations
+      summary: Create an organisation
+      description: Create an organisation
+      requestBody:
+        description: Organisation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganisation'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+  /v1/organisations/{identity}:
+    get:
+      tags:
+        - organisations
+      summary: Get an organisation by identity
+      description: Get an organisation by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Organisation identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    put:
+      tags:
+        - organisations
+      summary: Update an organisation
+      description: Update an organisation
+      parameters:
+        - name: identity
+          in: path
+          description: Organisation identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Organisation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/organisations.UpdateOrganisation'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organisation'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - organisations
+      summary: Delete an organisation
+      description: Delete an organisation
+      parameters:
+        - name: identity
+          in: path
+          description: Organisation identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /v1/personal-access-tokens:
+    get:
+      tags:
+        - Personal Access Tokens
+      summary: List all personal access tokens
+      description: List all personal access tokens
+      responses:
+        '200':
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Personal'
+    post:
+      tags:
+        - Personal Access Tokens
+      summary: Create a personal access token
+      description: Create a personal access token
+      requestBody:
+        description: Personal Access Token
+        content:
+          application/json:
+            schema:
+              $ref: >-
+                #/components/schemas/personalaccesstokens.CreatePersonalAccessToken
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  #/components/schemas/personalaccesstokens.CreatedPersonalAccessToken
+      x-codegen-request-body-name: body
+  /v1/personal-access-tokens/{accessTokenIdentity}:
+    get:
+      tags:
+        - Personal Access Tokens
+      summary: Get a personal access token by identity
+      description: Get a personal access token by identity
+      parameters:
+        - name: accessTokenIdentity
+          in: path
+          description: Personal Access Token identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Personal'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    delete:
+      tags:
+        - Personal Access Tokens
+      summary: Revoke a personal access token by identity
+      description: Revoke a personal access token by identity
+      parameters:
+        - name: accessTokenIdentity
+          in: path
+          description: Personal Access Token identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content: {}
+  /v1/projects:
+    get:
+      tags:
+        - projects
+      summary: List all projects
+      description: List all projects
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Project'
+    post:
+      tags:
+        - projects
+      summary: Create a project
+      description: Create a project
+      requestBody:
+        description: Project
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProject'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+  /v1/projects/{identity}:
+    get:
+      tags:
+        - projects
+      summary: Get a project by identity
+      description: Get a project by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Project identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+    put:
+      tags:
+        - projects
+      summary: Update a project by identity
+      description: Update a project by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Project identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Project
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProject'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - projects
+      summary: Delete a project by identity
+      description: Delete a project by identity
+      parameters:
+        - name: identity
+          in: path
+          description: Project identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Message'
+  /v1/tenants:
+    get:
+      tags:
+        - tenants
+      summary: List tenant spaces
+      description: List tenant spaces
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    post:
+      tags:
+        - tenants
+      summary: Creates a new tenant space
+      description: Creates a new tenant space
+      requestBody:
+        description: tenant space
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenants.CreateTenant'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+      x-codegen-request-body-name: body
+  /v1/tenants/{identity}:
+    get:
+      tags:
+        - tenants
+      summary: Gets a tenant space by identity
+      description: Gets a tenant space by identity
+      parameters:
+        - name: identity
+          in: path
+          description: identity of the tenant space
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    put:
+      tags:
+        - tenants
+      summary: Updates a tenant space by identity
+      description: Updates a tenant space by identity
+      parameters:
+        - name: identity
+          in: path
+          description: identity of the tenant space
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    delete:
+      tags:
+        - tenants
+      summary: Deletes a tenant space by identity
+      description: Deletes a tenant space by identity
+      parameters:
+        - name: identity
+          in: path
+          description: identity of the tenant space
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/kubeconfig:
+    get:
+      tags:
+        - Tenant
+      summary: Get tenant kubeconfig
+      description: >-
+        This endpoint retrieves an existing kubeconfig file for a specific
+        tenant's Kubernetes cluster.
+      parameters:
+        - name: identity
+          in: path
+          description: Tenant Identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kubeconfig retrieved successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Cluster not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    post:
+      tags:
+        - Tenant
+      summary: Create a tenant kubeconfig
+      description: >-
+        This endpoint generates a kubeconfig file for a specific tenant's
+        Kubernetes cluster.
+      parameters:
+        - name: identity
+          in: path
+          description: Tenant Identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Kubeconfig generated successfully
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '401':
+          description: Unauthorized
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Cluster not found
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal server error
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces:
+    get:
+      tags:
+        - tenants
+      summary: List all namespaces for a tenant
+      description: List all namespaces for a tenant
+      parameters:
+        - name: identity
+          in: path
+          description: tenant identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    post:
+      tags:
+        - tenants
+      summary: Create a new namespace for a tenant
+      description: Create a new namespace for a tenant
+      parameters:
+        - name: identity
+          in: path
+          description: tenant identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Namespace to create
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenants.CreateTenantNamespace'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+      x-codegen-request-body-name: body
+  /v1/tenants/{identity}/namespaces/{namespaceIdentity}:
+    get:
+      tags:
+        - tenants
+      summary: Get a namespace by identity
+      description: Get a namespace by identity
+      parameters:
+        - name: identity
+          in: path
+          description: tenant identity
+          required: true
+          schema:
+            type: string
+        - name: namespaceIdentity
+          in: path
+          description: namespace identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    put:
+      tags:
+        - tenants
+      summary: Update a namespace by identity
+      description: Update a namespace by identity
+      parameters:
+        - name: identity
+          in: path
+          description: tenant identity
+          required: true
+          schema:
+            type: string
+        - name: namespaceIdentity
+          in: path
+          description: namespace identity
+          required: true
+          schema:
+            type: string
+      requestBody:
+        description: Namespace to update
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/tenants.CreateTenantNamespace'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Tenant'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+      x-codegen-request-body-name: body
+    delete:
+      tags:
+        - tenants
+      summary: Delete a namespace by identity
+      description: Delete a namespace by identity
+      parameters:
+        - name: identity
+          in: path
+          description: tenant identity
+          required: true
+          schema:
+            type: string
+        - name: namespaceIdentity
+          in: path
+          description: namespace identity
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No Content
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/deployments:
+    get:
+      tags:
+        - tenants
+      summary: Lists deployments in a tenant namespace
+      description: Retrieves a list of deployments within the specified tenant's namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+    post:
+      tags:
+        - tenants
+      summary: Creates app deployment
+      description: Creates app deployment into namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/pods:
+    get:
+      tags:
+        - tenants
+      summary: Lists pods in a tenant namespace
+      description: Retrieves a list of pods within the specified tenant's namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/pods/logs:
+    get:
+      tags:
+        - tenants
+      summary: Retrieves all pod logs in a namespace
+      description: Fetches logs of all pods within the specified tenant's namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/pods/{pod}:
+    get:
+      tags:
+        - tenants
+      summary: Retrieves pod details
+      description: Gets detailed information about a specific pod in a tenant namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+        - name: pod
+          in: path
+          description: Name of the pod
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/pods/{pod}/yaml/{resource}:
+    get:
+      tags:
+        - tenants
+      summary: Retrieves pod YAML
+      description: >-
+        Fetches the YAML configuration of a specified pod within a tenant's
+        namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+        - name: pod
+          in: path
+          description: Name of the pod
+          required: true
+          schema:
+            type: string
+        - name: resource
+          in: path
+          description: Resource type (e.g., service, deployment)
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/services:
+    get:
+      tags:
+        - tenants
+      summary: Lists services in a tenant namespace
+      description: Retrieves a list of services within the specified tenant's namespace
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/services/exposure:
+    post:
+      tags:
+        - tenants
+      summary: Creates service exposure
+      description: Exposes a specified service to the external network
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+  /v1/tenants/{identity}/namespaces/{namespace_identity}/yaml:
+    get:
+      tags:
+        - tenants
+      summary: Retrieves namespace YAML
+      description: Fetches the YAML configuration of a specified namespace within a tenant
+      parameters:
+        - name: identity
+          in: path
+          description: Identity of the tenant space
+          required: true
+          schema:
+            type: string
+        - name: namespace_identity
+          in: path
+          description: Identity of the namespace
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/tenants.Message'
+components:
+  schemas:
+    AcceptInviteRequest:
+      required:
+        - inviteCode
+      type: object
+      properties:
+        inviteCode:
+          type: string
+    Cloud:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        cloudProviderType:
+          type: object
+          description: Name is a human-readable name of the object
+          allOf:
+            - $ref: '#/components/schemas/api.CloudProviderType'
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        enabled:
+          type: boolean
+          description: Enabled is a flag to indicate if the cloud provider is enabled
+        icon:
+          type: string
+          description: Icon is a URL to an icon representing the cloud provider
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        regions:
+          type: array
+          description: Regions is a list of regions available for this cloud provider
+          items:
+            $ref: '#/components/schemas/api.CloudRegion'
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    CreateCloud:
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+    CreateCloudRegion:
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+    CreateHostCluster:
+      required:
+        - tenantBaseDomain
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key value pairs that can be used to filter
+            and group objects
+        cloudIdentity:
+          type: string
+          description: CloudIdentity is the unique identifier of the cloud
+        cloudRegionIdentity:
+          type: string
+          description: CloudRegionIdentity is the unique identifier of the cloud region
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        enabled:
+          type: boolean
+          description: >-
+            Enabled determines if the host cluster is enabled and can be used
+            for hosting tenant spaces
+        kubeConfig:
+          type: string
+          description: >-
+            KubeConfig is the kubeconfig file for the host cluster encoded in
+            base64
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key value pairs that can be used to filter and
+            group objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        serviceMonitoringEnabled:
+          type: boolean
+          description: >-
+            ServiceMonitoringEnabled is a flag to indicate if the service
+            monitoring is enabled
+        tenantBaseDomain:
+          type: string
+          description: TenantBaseDomain is the base domain for the tenant spaces
+        tenantIngressClassName:
+          type: string
+          description: >-
+            TenantIngressClassName is the ingress class name for the tenant
+            spaces
+    CreateOrganisation:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+    CreateProject:
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+        organisation_identity:
+          type: string
+    CreatedCloudRegion:
+      type: object
+      properties:
+        identity:
+          type: string
+        name:
+          type: string
+    HostCluster:
+      required:
+        - name
+        - tenantBaseDomain
+        - tenantIngressClassName
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        cloudRegion:
+          type: object
+          description: CloudRegion is the cloud region this host cluster belongs to
+          allOf:
+            - $ref: '#/components/schemas/CloudRegion'
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        enabled:
+          type: boolean
+          description: Enabled is a flag to indicate if the host cluster is enabled
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        serviceMonitoringEnabled:
+          type: boolean
+          description: >-
+            ServiceMonitoringEnabled is a flag to indicate if the service
+            monitoring is enabled
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        tenantBaseDomain:
+          type: string
+          description: >-
+            TenantBaseDomain is the base domain for the tenant spaces kubernetes
+            api server access
+        tenantIngressClassName:
+          type: string
+          description: >-
+            TenantIngressClassName is the ingress class name for the tenant
+            spaces
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    InviteUserRequest:
+      required:
+        - email
+        - role
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        role:
+          $ref: '#/components/schemas/api.OrganisationMemberRole'
+    Message:
+      type: object
+      properties:
+        message:
+          type: string
+    Organisation:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        contact_email:
+          type: string
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+        vat_code:
+          type: string
+        vat_code_validated:
+          type: boolean
+        vat_code_validated_at:
+          type: string
+    OrganisationMember:
+      required:
+        - identity
+        - role
+      type: object
+      properties:
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        organisation:
+          $ref: '#/components/schemas/Organisation'
+        role:
+          type: object
+          description: Role is the role of the user in the organisation
+          allOf:
+            - $ref: '#/components/schemas/api.OrganisationMemberRole'
+        user:
+          $ref: '#/components/schemas/api.AppUser'
+    OrganisationMembmerInvite:
+      required:
+        - email
+        - role
+      type: object
+      properties:
+        createdAt:
+          type: string
+        email:
+          type: string
+        expiresAt:
+          type: string
+        inviteCode:
+          type: string
+        invitedByUser:
+          $ref: '#/components/schemas/api.AppUser'
+        organisation:
+          $ref: '#/components/schemas/Organisation'
+        role:
+          $ref: '#/components/schemas/api.OrganisationMemberRole'
+    Personal:
+      required:
+        - name
+      type: object
+      properties:
+        active:
+          type: boolean
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        expireAt:
+          type: string
+          description: ExpireAt is the time when the token will expire
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        lastUsedAt:
+          type: string
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        subject:
+          type: string
+          description: Subject is the unique identifier of the user this token belongs to
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    Project:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        organisation:
+          type: object
+          description: Name is a human-readable name of the object
+          allOf:
+            - $ref: '#/components/schemas/Organisation'
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    Tenant:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        resources:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        tenantCluster:
+          $ref: '#/components/schemas/api.TenantCluster'
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    api.AppUser:
+      type: object
+      properties:
+        blocked:
+          type: boolean
+          description: Blocked is a flag indicating if the user is blocked
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        displayName:
+          type: string
+          description: Name is the full name of the user
+        email:
+          type: string
+          description: Email is the email address of the user
+        lastSeenAt:
+          type: string
+          description: >-
+            LastSeenAt is the timestamp when the user was last seen by the
+            system
+        subject:
+          type: string
+          description: >-
+            Subject is the unique identifier for the user, based on the OIDC
+            subject
+    api.CloudProviderType:
+      type: string
+      enum:
+        - aws
+        - gcp
+        - azure
+        - openstack
+        - kubernetes
+        - hetzner
+        - scaleway
+        - cloudenv
+      x-enum-comments:
+        CloudProviderTypeKubernetes: generic / byoc?
+      x-enum-varnames:
+        - CloudProviderTypeAWS
+        - CloudProviderTypeGCP
+        - CloudProviderTypeAzure
+        - CloudProviderTypeOpenStack
+        - CloudProviderTypeKubernetes
+        - CloudProviderTypeHetzner
+        - CloudProviderTypeScaleway
+        - CloudProviderTypeCloudEnv
+    api.CloudRegion:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        cloud:
+          type: object
+          description: Cloud is the cloud provider this region belongs to
+          allOf:
+            - $ref: '#/components/schemas/Cloud'
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    api.OrganisationMemberRole:
+      type: string
+      enum:
+        - OWNER
+        - ADMIN
+        - MEMBER
+      x-enum-varnames:
+        - OrganisationMemberRoleOwner
+        - OrganisationMemberRoleAdmin
+        - OrganisationMemberRoleMember
+    api.TenantCluster:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is a map of key-value pairs used for storing additional
+            information
+        apiServerCA:
+          type: string
+        apiServerURL:
+          type: string
+          description: 'TODO: additional fields and settings for the cluster?'
+        cloud:
+          type: object
+          description: Name is a human-readable name of the object
+          allOf:
+            - $ref: '#/components/schemas/Cloud'
+        cloudRegion:
+          $ref: '#/components/schemas/CloudRegion'
+        createdAt:
+          type: string
+          description: CreatedAt is the timestamp when the object was created
+        deletedAt:
+          type: string
+          description: DeletedAt is the timestamp when the object was deleted
+        description:
+          type: string
+          description: Description is a human-readable description of the object
+        identity:
+          type: string
+          description: Identity is a unique identifier for the object
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Labels is a map of key-value pairs used for filtering and grouping
+            objects
+        lastStatusTransitioned_at:
+          type: string
+        name:
+          type: string
+          description: Name is a human-readable name of the object
+        namespaces:
+          type: array
+          description: Namespaces
+          items:
+            $ref: '#/components/schemas/Tenant'
+        objectVersion:
+          minimum: 0
+          type: integer
+          description: ObjectVersion represents the version of the object.
+        organisation:
+          $ref: '#/components/schemas/Organisation'
+        resources:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+        slug:
+          type: string
+          description: Slug is a human-readable unique identifier for the object
+        status:
+          type: object
+          description: Status
+          allOf:
+            - $ref: '#/components/schemas/api.TenantClusterStatus'
+        statusMessage:
+          type: string
+        updatedAt:
+          type: string
+          description: UpdatedAt is the timestamp when the object was last updated
+    api.TenantClusterStatus:
+      type: string
+      enum:
+        - creating
+        - provisioning
+        - deleting
+        - deleted
+        - updating
+        - ready
+        - failed
+      x-enum-varnames:
+        - TenantClusterStatusCreating
+        - TenantClusterStatusProvisioning
+        - TenantClusterStatusDeleting
+        - TenantClusterStatusDeleted
+        - TenantClusterStatusUpdating
+        - TenantClusterStatusReady
+        - TenantClusterStatusFailed
+    appusers.CreateUserHostClusterRequest:
+      type: object
+      properties:
+        cloud:
+          type: string
+        region:
+          type: string
+    organisations.UpdateOrganisation:
+      required:
+        - name
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+    personalaccesstokens.CreatePersonalAccessToken:
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        expireAt:
+          type: string
+        ipWhitelist:
+          type: array
+          items:
+            type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+        scopes:
+          type: array
+          items:
+            type: string
+    personalaccesstokens.CreatedPersonalAccessToken:
+      type: object
+      properties:
+        expireAt:
+          type: string
+        identity:
+          type: string
+        name:
+          type: string
+        token:
+          type: string
+    tenants.CreateTenant:
+      required:
+        - cloudId
+        - name
+        - regionId
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: Annotations is a map of annotations for the tenant space. Optional.
+        cloudId:
+          type: string
+          description: CloudId is the identity of the cloud provider
+        description:
+          type: string
+          description: Description is the description of the tenant space. Optional.
+        enableMonitoring:
+          type: boolean
+          description: >-
+            EnableMonitoring is a flag to enable monitoring for the tenant
+            space. Optional.
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: Labels is a map of labels for the tenant space. Optional.
+        name:
+          maxLength: 255
+          minLength: 2
+          type: string
+          description: Name is the name of the tenant space
+        projectId:
+          type: string
+          description: ProjectId is the identity of the project. Optional.
+        regionId:
+          type: string
+          description: RegionId is the identity of the region
+        resources:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: string
+    tenants.CreateTenantNamespace:
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+        description:
+          type: string
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+        name:
+          type: string
+    tenants.Message:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Message is the message
+    v1.FieldsV1:
+      type: object
+    v1.ManagedFieldsEntry:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: |-
+            APIVersion defines the version of this resource that this field set
+            applies to. The format is "group/version" just like the top-level
+            APIVersion field. It is necessary to track the version of a field
+            set because it cannot be automatically converted.
+        fieldsType:
+          type: string
+          description: >-
+            FieldsType is the discriminator for the different fields format and
+            version.
+
+            There is currently only one possible value: "FieldsV1"
+        fieldsV1:
+          type: object
+          description: >-
+            FieldsV1 holds the first JSON version format as described in the
+            "FieldsV1" type.
+
+            +optional
+          allOf:
+            - $ref: '#/components/schemas/v1.FieldsV1'
+        manager:
+          type: string
+          description: Manager is an identifier of the workflow managing these fields.
+        operation:
+          type: object
+          description: >-
+            Operation is the type of operation which lead to this
+            ManagedFieldsEntry being created.
+
+            The only valid values for this field are 'Apply' and 'Update'.
+          allOf:
+            - $ref: '#/components/schemas/v1.ManagedFieldsOperationType'
+        subresource:
+          type: string
+          description: >-
+            Subresource is the name of the subresource used to update that
+            object, or
+
+            empty string if the object was updated through the main resource.
+            The
+
+            value of this field is used to distinguish between managers, even if
+            they
+
+            share the same name. For example, a status update will be distinct
+            from a
+
+            regular update using the same manager name.
+
+            Note that the APIVersion field is not related to the Subresource
+            field and
+
+            it always corresponds to the version of the main resource.
+        time:
+          type: string
+          description: |-
+            Time is the timestamp of when the ManagedFields entry was added. The
+            timestamp will also be updated if a field is added, the manager
+            changes any of the owned fields value or removes a field. The
+            timestamp does not update when a field is removed from the entry
+            because another manager took it over.
+            +optional
+    v1.ManagedFieldsOperationType:
+      type: string
+      enum:
+        - Apply
+        - Update
+      x-enum-varnames:
+        - ManagedFieldsOperationApply
+        - ManagedFieldsOperationUpdate
+    v1.ObjectMeta:
+      type: object
+      properties:
+        annotations:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Annotations is an unstructured key value map stored with a resource
+            that may be
+
+            set by external tools to store and retrieve arbitrary metadata. They
+            are not
+
+            queryable and should be preserved when modifying objects.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations
+
+            +optional
+        creationTimestamp:
+          type: string
+          description: >-
+            CreationTimestamp is a timestamp representing the server time when
+            this object was
+
+            created. It is not guaranteed to be set in happens-before order
+            across separate operations.
+
+            Clients may not set this value. It is represented in RFC3339 form
+            and is in UTC.
+
+
+            Populated by the system.
+
+            Read-only.
+
+            Null for lists.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+            +optional
+        deletionGracePeriodSeconds:
+          type: integer
+          description: >-
+            Number of seconds allowed for this object to gracefully terminate
+            before
+
+            it will be removed from the system. Only set when deletionTimestamp
+            is also set.
+
+            May only be shortened.
+
+            Read-only.
+
+            +optional
+        deletionTimestamp:
+          type: string
+          description: >-
+            DeletionTimestamp is RFC 3339 date and time at which this resource
+            will be deleted. This
+
+            field is set by the server when a graceful deletion is requested by
+            the user, and is not
+
+            directly settable by a client. The resource is expected to be
+            deleted (no longer visible
+
+            from resource lists, and not reachable by name) after the time in
+            this field, once the
+
+            finalizers list is empty. As long as the finalizers list contains
+            items, deletion is blocked.
+
+            Once the deletionTimestamp is set, this value may not be unset or be
+            set further into the
+
+            future, although it may be shortened or the resource may be deleted
+            prior to this time.
+
+            For example, a user may request that a pod is deleted in 30 seconds.
+            The Kubelet will react
+
+            by sending a graceful termination signal to the containers in the
+            pod. After that 30 seconds,
+
+            the Kubelet will send a hard termination signal (SIGKILL) to the
+            container and after cleanup,
+
+            remove the pod from the API. In the presence of network partitions,
+            this object may still
+
+            exist after this timestamp, until an administrator or automated
+            process can determine the
+
+            resource is fully terminated.
+
+            If not set, graceful deletion of the object has not been requested.
+
+
+            Populated by the system when a graceful deletion is requested.
+
+            Read-only.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+            +optional
+        finalizers:
+          type: array
+          description: >-
+            Must be empty before the object is deleted from the registry. Each
+            entry
+
+            is an identifier for the responsible component that will remove the
+            entry
+
+            from the list. If the deletionTimestamp of the object is non-nil,
+            entries
+
+            in this list can only be removed.
+
+            Finalizers may be processed and removed in any order.  Order is NOT
+            enforced
+
+            because it introduces significant risk of stuck finalizers.
+
+            finalizers is a shared field, any actor with permission can reorder
+            it.
+
+            If the finalizer list is processed in order, then this can lead to a
+            situation
+
+            in which the component responsible for the first finalizer in the
+            list is
+
+            waiting for a signal (field value, external system, or other)
+            produced by a
+
+            component responsible for a finalizer later in the list, resulting
+            in a deadlock.
+
+            Without enforced ordering finalizers are free to order amongst
+            themselves and
+
+            are not vulnerable to ordering changes in the list.
+
+            +optional
+
+            +patchStrategy=merge
+
+            +listType=set
+          items:
+            type: string
+        generateName:
+          type: string
+          description: >-
+            GenerateName is an optional prefix, used by the server, to generate
+            a unique
+
+            name ONLY IF the Name field has not been provided.
+
+            If this field is used, the name returned to the client will be
+            different
+
+            than the name passed. This value will also be combined with a unique
+            suffix.
+
+            The provided value has the same validation rules as the Name field,
+
+            and may be truncated by the length of the suffix required to make
+            the value
+
+            unique on the server.
+
+
+            If this field is specified and the generated name exists, the server
+            will return a 409.
+
+
+            Applied only if Name is not specified.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#idempotency
+
+            +optional
+        generation:
+          type: integer
+          description: >-
+            A sequence number representing a specific generation of the desired
+            state.
+
+            Populated by the system. Read-only.
+
+            +optional
+        labels:
+          type: object
+          additionalProperties:
+            type: string
+          description: >-
+            Map of string keys and values that can be used to organize and
+            categorize
+
+            (scope and select) objects. May match selectors of replication
+            controllers
+
+            and services.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/labels
+
+            +optional
+        managedFields:
+          type: array
+          description: |-
+            ManagedFields maps workflow-id and version to the set of fields
+            that are managed by that workflow. This is mostly for internal
+            housekeeping, and users typically shouldn't need to set or
+            understand this field. A workflow can be the user's name, a
+            controller's name, or the name of a specific apply path like
+            "ci-cd". The set of fields is always in the version that the
+            workflow used when modifying the object.
+
+            +optional
+            +listType=atomic
+          items:
+            $ref: '#/components/schemas/v1.ManagedFieldsEntry'
+        name:
+          type: string
+          description: >-
+            Name must be unique within a namespace. Is required when creating
+            resources, although
+
+            some resources may allow a client to request the generation of an
+            appropriate name
+
+            automatically. Name is primarily intended for creation idempotence
+            and configuration
+
+            definition.
+
+            Cannot be updated.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names
+
+            +optional
+        namespace:
+          type: string
+          description: >-
+            Namespace defines the space within which each name must be unique.
+            An empty namespace is
+
+            equivalent to the "default" namespace, but "default" is the
+            canonical representation.
+
+            Not all objects are required to be scoped to a namespace - the value
+            of this field for
+
+            those objects will be empty.
+
+
+            Must be a DNS_LABEL.
+
+            Cannot be updated.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces
+
+            +optional
+        ownerReferences:
+          type: array
+          description: >-
+            List of objects depended by this object. If ALL objects in the list
+            have
+
+            been deleted, this object will be garbage collected. If this object
+            is managed by a controller,
+
+            then an entry in this list will point to this controller, with the
+            controller field set to true.
+
+            There cannot be more than one managing controller.
+
+            +optional
+
+            +patchMergeKey=uid
+
+            +patchStrategy=merge
+
+            +listType=map
+
+            +listMapKey=uid
+          items:
+            $ref: '#/components/schemas/v1.OwnerReference'
+        resourceVersion:
+          type: string
+          description: >-
+            An opaque value that represents the internal version of this object
+            that can
+
+            be used by clients to determine when objects have changed. May be
+            used for optimistic
+
+            concurrency, change detection, and the watch operation on a resource
+            or set of resources.
+
+            Clients must treat these values as opaque and passed unmodified back
+            to the server.
+
+            They may only be valid for a particular resource or set of
+            resources.
+
+
+            Populated by the system.
+
+            Read-only.
+
+            Value must be treated as opaque by clients and .
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#concurrency-control-and-consistency
+
+            +optional
+        selfLink:
+          type: string
+          description: >-
+            Deprecated: selfLink is a legacy read-only field that is no longer
+            populated by the system.
+
+            +optional
+        uid:
+          type: string
+          description: >-
+            UID is the unique in time and space value for this object. It is
+            typically generated by
+
+            the server on successful creation of a resource and is not allowed
+            to change on PUT
+
+            operations.
+
+
+            Populated by the system.
+
+            Read-only.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids
+
+            +optional
+    v1.OwnerReference:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: API version of the referent.
+        blockOwnerDeletion:
+          type: boolean
+          description: >-
+            If true, AND if the owner has the "foregroundDeletion" finalizer,
+            then
+
+            the owner cannot be deleted from the key-value store until this
+
+            reference is removed.
+
+            See
+            https://kubernetes.io/docs/concepts/architecture/garbage-collection/#foreground-deletion
+
+            for how the garbage collector interacts with this field and enforces
+            the foreground deletion.
+
+            Defaults to false.
+
+            To set this field, a user needs "delete" permission of the owner,
+
+            otherwise 422 (Unprocessable Entity) will be returned.
+
+            +optional
+        controller:
+          type: boolean
+          description: |-
+            If true, this reference points to the managing controller.
+            +optional
+        kind:
+          type: string
+          description: >-
+            Kind of the referent.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+        name:
+          type: string
+          description: >-
+            Name of the referent.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/names#names
+        uid:
+          type: string
+          description: >-
+            UID of the referent.
+
+            More info:
+            https://kubernetes.io/docs/concepts/overview/working-with-objects/names#uids
+    v1.TokenReview:
+      type: object
+      properties:
+        apiVersion:
+          type: string
+          description: >-
+            APIVersion defines the versioned schema of this representation of an
+            object.
+
+            Servers should convert recognized schemas to the latest internal
+            value, and
+
+            may reject unrecognized values.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources
+
+            +optional
+        kind:
+          type: string
+          description: >-
+            Kind is a string value representing the REST resource this object
+            represents.
+
+            Servers may infer this from the endpoint the client submits requests
+            to.
+
+            Cannot be updated.
+
+            In CamelCase.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds
+
+            +optional
+        metadata:
+          type: object
+          description: >-
+            Standard object's metadata.
+
+            More info:
+            https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#metadata
+
+            +optional
+          allOf:
+            - $ref: '#/components/schemas/v1.ObjectMeta'
+        spec:
+          type: object
+          description: Spec holds information about the request being evaluated
+          allOf:
+            - $ref: '#/components/schemas/v1.TokenReviewSpec'
+        status:
+          type: object
+          description: >-
+            Status is filled in by the server and indicates whether the request
+            can be authenticated.
+
+            +optional
+          allOf:
+            - $ref: '#/components/schemas/v1.TokenReviewStatus'
+    v1.TokenReviewSpec:
+      type: object
+      properties:
+        audiences:
+          type: array
+          description: >-
+            Audiences is a list of the identifiers that the resource server
+            presented
+
+            with the token identifies as. Audience-aware token authenticators
+            will
+
+            verify that the token was intended for at least one of the audiences
+            in
+
+            this list. If no audiences are provided, the audience will default
+            to the
+
+            audience of the Kubernetes apiserver.
+
+            +optional
+
+            +listType=atomic
+          items:
+            type: string
+        token:
+          type: string
+          description: |-
+            Token is the opaque bearer token.
+            +optional
+    v1.TokenReviewStatus:
+      type: object
+      properties:
+        audiences:
+          type: array
+          description: >-
+            Audiences are audience identifiers chosen by the authenticator that
+            are
+
+            compatible with both the TokenReview and token. An identifier is any
+
+            identifier in the intersection of the TokenReviewSpec audiences and
+            the
+
+            token's audiences. A client of the TokenReview API that sets the
+
+            spec.audiences field should validate that a compatible audience
+            identifier
+
+            is returned in the status.audiences field to ensure that the
+            TokenReview
+
+            server is audience aware. If a TokenReview returns an empty
+
+            status.audience field where status.authenticated is "true", the
+            token is
+
+            valid against the audience of the Kubernetes API server.
+
+            +optional
+
+            +listType=atomic
+          items:
+            type: string
+        authenticated:
+          type: boolean
+          description: >-
+            Authenticated indicates that the token was associated with a known
+            user.
+
+            +optional
+        error:
+          type: string
+          description: |-
+            Error indicates that the token couldn't be checked
+            +optional
+        user:
+          type: object
+          description: |-
+            User is the UserInfo associated with the provided token.
+            +optional
+          allOf:
+            - $ref: '#/components/schemas/v1.UserInfo'
+    v1.UserInfo:
+      type: object
+      properties:
+        extra:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          description: |-
+            Any additional information provided by the authenticator.
+            +optional
+        groups:
+          type: array
+          description: |-
+            The names of groups this user is a part of.
+            +optional
+            +listType=atomic
+          items:
+            type: string
+        uid:
+          type: string
+          description: >-
+            A unique value that identifies this user across time. If this user
+            is
+
+            deleted and another user by the same name is added, they will have
+
+            different UIDs.
+
+            +optional
+        username:
+          type: string
+          description: |-
+            The name that uniquely identifies this user among all active users.
+            +optional
+x-original-swagger-version: '2.0'
