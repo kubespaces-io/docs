@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "http://api.kubespaces.cloud/"
+      "url": "http://sandbox.mintlify.com/kubespaces"
     }
   ],
   "security": [
