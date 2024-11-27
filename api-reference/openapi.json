@@ -10,7 +10,7 @@
   },
   "servers": [
     {
-      "url": "//api.kubespaces.cloud/"
+      "url": "http://api.kubespaces.cloud/"
     }
   ],
   "security": [
